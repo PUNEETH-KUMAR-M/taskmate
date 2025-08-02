@@ -6,7 +6,10 @@ import com.taskmate.service.TaskService;
 import com.taskmate.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
 
@@ -16,12 +19,24 @@ import java.util.List;
 public class AdminController {
 
     private final TaskService taskService;
+    private final HttpServletRequest request;
 
     // ✅ Get all tasks
     @GetMapping("")
     public ResponseEntity<List<Task>> getAllTasks() {
-        List<Task> tasks = taskService.getAllTasks();
-        return ResponseEntity.ok(tasks);
+        System.out.println("🔍 AdminController: Getting all tasks...");
+        System.out.println("🔍 Request URI: " + request.getRequestURI());
+        System.out.println("🔍 User: " + SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        System.out.println("🔍 Authorities: " + SecurityContextHolder.getContext().getAuthentication().getAuthorities());
+        try {
+            List<Task> tasks = taskService.getAllTasks();
+            System.out.println("✅ Found " + tasks.size() + " tasks");
+            return ResponseEntity.ok(tasks);
+        } catch (Exception e) {
+            System.out.println("❌ Error getting tasks: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(500).build();
+        }
     }
 
     // ✅ Create task for a user
