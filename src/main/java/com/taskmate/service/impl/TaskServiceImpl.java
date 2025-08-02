@@ -24,13 +24,27 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Task createTask(Task task, Long userId) {
+        System.out.println("🔧 TaskService: Creating task for user ID: " + userId);
+        System.out.println("📝 Task details: " + task.getTitle() + " - " + task.getDescription());
+        
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
 
+        System.out.println("👤 Found user: " + user.getName() + " (" + user.getEmail() + ")");
+        
         task.setAssignedTo(user);
+        task.setStatus(TaskStatus.PENDING); // Ensure status is set
         
         Task savedTask = taskRepository.save(task);
-        webSocketService.notifyTaskCreated(savedTask);
+        System.out.println("✅ Task saved with ID: " + savedTask.getId());
+        
+        // Notify via WebSocket
+        try {
+            webSocketService.notifyTaskCreated(savedTask);
+            System.out.println("📡 WebSocket notification sent");
+        } catch (Exception e) {
+            System.out.println("⚠️ WebSocket notification failed: " + e.getMessage());
+        }
         
         return savedTask;
     }

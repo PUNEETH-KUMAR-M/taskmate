@@ -44,9 +44,23 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse register(RegisterRequest request, Role role) {
+        System.out.println("🔐 Registering user: " + request.getEmail() + " with role: " + role);
+        
+        // Check if user already exists
         Optional<User> existing = userRepository.findByEmail(request.getEmail());
         if (existing.isPresent()) {
-            throw new IllegalArgumentException("User already exists");
+            System.out.println("❌ User already exists: " + request.getEmail());
+            throw new IllegalArgumentException("User already exists with this email");
+        }
+
+        // If trying to register as ADMIN, check if admin already exists
+        if (role == Role.ADMIN) {
+            long adminCount = userRepository.countByRole(Role.ADMIN);
+            System.out.println("👑 Current admin count: " + adminCount);
+            if (adminCount > 0) {
+                System.out.println("❌ Admin already exists, registration denied");
+                throw new IllegalArgumentException("Admin already exists. Only one admin is allowed.");
+            }
         }
 
         User user = User.builder()
@@ -56,7 +70,8 @@ public class AuthenticationService {
                 .role(role)
                 .build();
 
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        System.out.println("✅ User registered successfully: " + savedUser.getEmail() + " (ID: " + savedUser.getId() + ")");
 
         String jwtToken = jwtService.generateToken(user.getEmail());
         saveUserToken(user, jwtToken);
@@ -111,5 +126,4 @@ public class AuthenticationService {
         }
         tokenRepository.saveAll(validTokens);
     }
-
 }

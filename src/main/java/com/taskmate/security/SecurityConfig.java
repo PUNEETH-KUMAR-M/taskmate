@@ -41,6 +41,7 @@ public class SecurityConfig {
                         .requestMatchers("/js/**").permitAll()
                         .requestMatchers("/ws/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/test/**").permitAll()
                         .requestMatchers("/api/task/**").hasRole("ADMIN")
                         .requestMatchers("/api/user/**").hasAnyRole("ADMIN", "USER")
                         .requestMatchers("/api/profile/**").hasAnyRole("ADMIN", "USER")

@@ -51,6 +51,39 @@ body {
     gap: 1rem;
 }
 
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* Logout button specific styling */
+#userSection {
+    display: flex !important;
+    align-items: center;
+    gap: 1rem;
+}
+
+#userSection .btn-outline {
+    background: #dc3545;
+    color: white;
+    border: 2px solid #dc3545;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+#userSection .btn-outline:hover {
+    background: #c82333;
+    border-color: #c82333;
+    transform: translateY(-2px);
+}
+
+#userName {
+    font-weight: 600;
+    color: #333;
+}
+
 /* Buttons */
 .btn {
     padding: 0.75rem 1.5rem;
@@ -97,6 +130,11 @@ body {
     color: white;
 }
 
+.btn-large {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+}
+
 /* Main Content */
 .main-content {
     margin-top: 80px;
@@ -104,6 +142,135 @@ body {
     max-width: 1200px;
     margin-left: auto;
     margin-right: auto;
+}
+
+/* Landing Page */
+.landing-page {
+    min-height: calc(100vh - 80px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 0;
+}
+
+.hero-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    max-width: 1200px;
+    width: 100%;
+}
+
+.hero-content {
+    text-align: left;
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+    color: #ffffff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.gradient-text {
+    background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+}
+
+.hero-description {
+    font-size: 1.25rem;
+    color: #ffffff;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.hero-features {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #ffffff;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.feature-item i {
+    font-size: 1.2rem;
+    color: #ffffff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.hero-visual {
+    position: relative;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.floating-card {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 1.5rem;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 600;
+    color: #333;
+    animation: float 6s ease-in-out infinite;
+}
+
+.floating-card i {
+    font-size: 1.5rem;
+    color: #667eea;
+}
+
+.card-1 {
+    top: 20%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.card-2 {
+    top: 50%;
+    right: 20%;
+    animation-delay: 2s;
+}
+
+.card-3 {
+    bottom: 20%;
+    left: 20%;
+    animation-delay: 4s;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
 }
 
 /* Modals */
@@ -117,15 +284,18 @@ body {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(5px);
+    overflow-y: auto;
 }
 
 .modal-content {
     background-color: white;
-    margin: 5% auto;
+    margin: 2% auto;
     padding: 2rem;
     border-radius: 15px;
     width: 90%;
     max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
     position: relative;
 }
@@ -177,6 +347,19 @@ body {
 .form-group textarea {
     resize: vertical;
     min-height: 100px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e1e5e9;
+}
+
+.form-actions .btn {
+    min-width: 120px;
 }
 
 /* Dashboard */
@@ -415,6 +598,37 @@ body {
         gap: 1rem;
         text-align: center;
     }
+    
+    .hero-section {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        text-align: center;
+    }
+    
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .hero-features {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .hero-actions {
+        justify-content: center;
+    }
+    
+    .hero-visual {
+        height: 300px;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .form-actions .btn {
+        width: 100%;
+    }
 }
 
 /* Animations */
@@ -483,4 +697,45 @@ body {
         transform: translateX(0);
         opacity: 1;
     }
+} 
+
+/* Create Task Modal Specific Styles */
+#createTaskModal .modal-content {
+    max-height: 85vh;
+    overflow-y: auto;
+    padding-bottom: 2rem;
+}
+
+#createTaskModal .form-group {
+    margin-bottom: 1.5rem;
+}
+
+#createTaskModal .form-actions {
+    position: sticky;
+    bottom: 0;
+    background: white;
+    padding: 1rem 0;
+    margin-top: 2rem;
+    border-top: 2px solid #e1e5e9;
+}
+
+#createTaskModal .btn {
+    min-width: 120px;
+    padding: 0.75rem 1.5rem;
+}
+
+/* Ensure all form elements are visible */
+#createTaskModal input,
+#createTaskModal select,
+#createTaskModal textarea {
+    display: block;
+    width: 100%;
+    margin-bottom: 0.5rem;
+}
+
+#createTaskModal label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #333;
 } 

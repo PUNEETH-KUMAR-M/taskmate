@@ -22,7 +22,9 @@
                 </div>
                 <div class="nav-item" id="userSection" style="display: none;">
                     <span id="userName"></span>
-                    <button class="btn btn-outline" onclick="logout()">Logout</button>
+                    <button class="btn btn-outline" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
                 </div>
             </div>
         </div>
@@ -30,6 +32,60 @@
 
     <!-- Main Content -->
     <main class="main-content">
+        <!-- Landing Page Hero Section -->
+        <div id="landingPage" class="landing-page">
+            <div class="hero-section">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        <span class="gradient-text">TaskMate</span>
+                        <br>Real-time Task Management
+                    </h1>
+                    <p class="hero-description">
+                        Streamline your workflow with our powerful task management platform. 
+                        Collaborate, track progress, and achieve your goals efficiently.
+                    </p>
+                    <div class="hero-features">
+                        <div class="feature-item">
+                            <i class="fas fa-users"></i>
+                            <span>Team Collaboration</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Real-time Updates</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-mobile-alt"></i>
+                            <span>Mobile Friendly</span>
+                        </div>
+                    </div>
+                    <div class="hero-actions">
+                        <button class="btn btn-primary btn-large" onclick="showRegisterModal()">
+                            <i class="fas fa-rocket"></i>
+                            Get Started
+                        </button>
+                        <button class="btn btn-secondary btn-large" onclick="showLoginModal()">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Sign In
+                        </button>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="floating-card card-1">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Task Completed</span>
+                    </div>
+                    <div class="floating-card card-2">
+                        <i class="fas fa-clock"></i>
+                        <span>In Progress</span>
+                    </div>
+                    <div class="floating-card card-3">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>High Priority</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Login Modal -->
         <div id="loginModal" class="modal">
             <div class="modal-content">
@@ -164,9 +220,18 @@
                     </div>
                     <div class="form-group">
                         <label for="taskAssignee">Assign To</label>
-                        <select id="taskAssignee" required></select>
+                        <select id="taskAssignee" required>
+                            <option value="">Select User</option>
+                        </select>
                     </div>
-                    <button type="submit" class="btn btn-primary">Create Task</button>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Create Task
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('createTaskModal')">
+                            Cancel
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>

@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/profile")
 @RequiredArgsConstructor
@@ -36,9 +38,17 @@ public class UserProfileController {
 
     @GetMapping("/users")
     public ResponseEntity<?> getAllUsers() {
+        System.out.println("🔍 UserProfileController: Getting all users...");
         try {
-            return ResponseEntity.ok(userService.getAllUsers());
+            List<User> users = userService.getAllUsers();
+            System.out.println("✅ Found " + users.size() + " users");
+            for (User user : users) {
+                System.out.println("👤 User: " + user.getName() + " (ID: " + user.getId() + ", Email: " + user.getEmail() + ", Role: " + user.getRole() + ")");
+            }
+            return ResponseEntity.ok(users);
         } catch (Exception e) {
+            System.out.println("❌ Error getting users: " + e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.status(500).build();
         }
     }
