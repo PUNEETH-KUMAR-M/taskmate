@@ -25,6 +25,12 @@ public class Task {
     @Enumerated(EnumType.STRING)
     private TaskStatus status;
 
+    @Enumerated(EnumType.STRING)
+    private TaskPriority priority = TaskPriority.MEDIUM;
+
+    @Column(columnDefinition = "TEXT")
+    private String comments;
+
     // 👇 Link to the User (assigned user)
     @ManyToOne
     @JoinColumn(name = "user_id")

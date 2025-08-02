@@ -34,8 +34,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String jwt;
         final String userEmail;
 
-        // Skip JWT processing for auth endpoints
-        if (request.getRequestURI().startsWith("/api/auth/")) {
+        // Skip JWT processing for static resources and main page
+        String requestURI = request.getRequestURI();
+        if (requestURI.equals("/") || 
+            requestURI.equals("/index.html") ||
+            requestURI.startsWith("/api/auth/") ||
+            requestURI.startsWith("/css/") ||
+            requestURI.startsWith("/js/") ||
+            requestURI.startsWith("/ws/") ||
+            requestURI.startsWith("/static/") ||
+            requestURI.startsWith("/templates/") ||
+            requestURI.equals("/favicon.ico")) {
             filterChain.doFilter(request, response);
             return;
         }
