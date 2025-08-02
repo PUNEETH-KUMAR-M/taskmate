@@ -41,7 +41,12 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public AuthenticationResponse login(@RequestBody AuthenticationRequest request) {
-        return authService.authenticate(request);
+    public ResponseEntity<?> login(@RequestBody AuthenticationRequest request) {
+        try {
+            AuthenticationResponse response = authService.authenticate(request);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Authentication failed: " + e.getMessage());
+        }
     }
 }

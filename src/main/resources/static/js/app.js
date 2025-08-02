@@ -78,7 +78,7 @@ async function handleLogin(event) {
         } else {
             const errorData = await response.text();
             console.error('Login failed:', errorData);
-            showNotification('Login failed. Please check your credentials.', 'error');
+            showNotification(`Login failed: ${errorData}`, 'error');
         }
     } catch (error) {
         console.error('Login error:', error);
@@ -132,15 +132,7 @@ async function handleRegister(event) {
         } else {
             const errorData = await response.text();
             console.error('❌ Registration failed:', response.status, errorData);
-            
-            // Handle specific error cases
-            if (errorData.includes("Admin already exists")) {
-                showNotification('Admin already exists. Only one admin is allowed.', 'error');
-            } else if (errorData.includes("User already exists")) {
-                showNotification('User already exists with this email.', 'error');
-            } else {
-                showNotification(`Registration failed: ${errorData}`, 'error');
-            }
+            showNotification(`Registration failed: ${errorData}`, 'error');
         }
     } catch (error) {
         console.error('❌ Registration error:', error);
