@@ -29,9 +29,10 @@
 
 ## 🛠️ Technology Stack
 
-**Backend**: Java 21, Spring Boot 3.5.4, Spring Security, Spring Data JPA, MySQL 8.0, JWT, Lombok
-**Frontend**: Thymeleaf, HTML5/CSS3, JavaScript, WebSocket
-**Tools**: Maven, Spring Boot DevTools, Postman for testing
+**Backend**: Java 21, Spring Boot 3.5.4, Spring Security, Spring Data JPA, MySQL 8.0, JWT, Lombok <br>
+**Frontend**: Thymeleaf, HTML5/CSS3, JavaScript, WebSocket <br>
+**Tools**: Maven, Spring Boot DevTools, Postman for testing <br>
+**IDE**: Intellij IDEA , Cursor
 
 ---
 
