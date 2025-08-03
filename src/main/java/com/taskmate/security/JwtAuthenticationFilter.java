@@ -62,13 +62,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     .orElse(null);
 
             if (user != null) {
-                System.out.println("🔍 Found user: " + user.getEmail() + " with role: " + user.getRole());
-                
                 var isTokenValid = tokenRepository.findAllByUser(user).stream()
                         .anyMatch(token -> !token.isExpired() && !token.isRevoked() && token.getToken().equals(jwt));
-
-                System.out.println("🔐 Token valid: " + isTokenValid);
-                System.out.println("🔐 JWT valid: " + jwtService.isTokenValid(jwt, user));
 
                 if (jwtService.isTokenValid(jwt, user)) {
                     var authToken = new UsernamePasswordAuthenticationToken(
@@ -78,19 +73,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     );
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
-                    
-                    System.out.println("✅ Authentication set for user: " + user.getEmail());
-                    System.out.println("🔑 Authorities: " + user.getAuthorities());
-                    System.out.println("🔑 Role: " + user.getRole());
-                    System.out.println("🔑 Role Authority: " + user.getRole().getAuthority());
-                } else {
-                    System.out.println("❌ JWT validation failed");
                 }
-            } else {
-                System.out.println("❌ User not found: " + userEmail);
             }
-        } else {
-            System.out.println("🔍 No userEmail or already authenticated");
         }
 
         filterChain.doFilter(request, response);

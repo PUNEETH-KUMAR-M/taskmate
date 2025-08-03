@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -22,7 +21,6 @@ public class UserController {
     // ✅ 1. View own tasks
     @GetMapping("/tasks")
     public ResponseEntity<List<Task>> getUserTasks(@RequestParam String email) {
-        System.out.println("🔥 Inside getUserTasks handler");
         try {
             User user = userService.findByEmail(email)
                     .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
@@ -33,13 +31,10 @@ public class UserController {
     }
     @PostMapping("/create-user")
     public ResponseEntity<User> createUser(@RequestBody User user) {
-        System.out.println("📥 Incoming create-user: " + user.getEmail());
-
         try {
             User created = userService.saveUser(user);
             return ResponseEntity.ok(created);
         } catch (Exception e) {
-            e.printStackTrace();
             return ResponseEntity.badRequest().body(null);
         }
     }

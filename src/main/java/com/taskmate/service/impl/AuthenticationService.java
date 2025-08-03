@@ -33,32 +33,25 @@ public class AuthenticationService {
     // Clear all old tokens on startup
     @PostConstruct
     public void clearAllTokens() {
-        System.out.println("🧹 Clearing all old tokens...");
         List<Token> allTokens = tokenRepository.findAll();
         for (Token token : allTokens) {
             token.setExpired(true);
             token.setRevoked(true);
         }
         tokenRepository.saveAll(allTokens);
-        System.out.println("✅ Cleared " + allTokens.size() + " old tokens");
     }
 
     public AuthenticationResponse register(RegisterRequest request, Role role) {
-        System.out.println("🔐 Registering user: " + request.getEmail() + " with role: " + role);
-        
         // Check if user already exists
         Optional<User> existing = userRepository.findByEmail(request.getEmail());
         if (existing.isPresent()) {
-            System.out.println("❌ User already exists: " + request.getEmail());
             throw new IllegalArgumentException("User already exists with this email");
         }
 
         // If trying to register as ADMIN, check if admin already exists
         if (role == Role.ADMIN) {
             long adminCount = userRepository.countByRole(Role.ADMIN);
-            System.out.println("👑 Current admin count: " + adminCount);
             if (adminCount > 0) {
-                System.out.println("❌ Admin already exists, registration denied");
                 throw new IllegalArgumentException("Admin already exists. Only one admin is allowed.");
             }
         }
@@ -71,7 +64,6 @@ public class AuthenticationService {
                 .build();
 
         User savedUser = userRepository.save(user);
-        System.out.println("✅ User registered successfully: " + savedUser.getEmail() + " (ID: " + savedUser.getId() + ")");
 
         String jwtToken = jwtService.generateToken(user.getEmail());
         saveUserToken(user, jwtToken);
@@ -80,8 +72,6 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        System.out.println("🔐 Attempting authentication for: " + request.getEmail());
-        
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -89,8 +79,6 @@ public class AuthenticationService {
                             request.getPassword()
                     )
             );
-            
-            System.out.println("✅ Authentication successful for: " + request.getEmail());
 
             User user = userRepository.findByEmail(request.getEmail())
                     .orElseThrow(() -> new IllegalArgumentException("User not found"));
@@ -102,7 +90,6 @@ public class AuthenticationService {
 
             return new AuthenticationResponse(jwtToken);
         } catch (Exception e) {
-            System.out.println("❌ Authentication failed: " + e.getMessage());
             throw e;
         }
     }
@@ -114,8 +101,7 @@ public class AuthenticationService {
                 .expired(false)
                 .revoked(false)
                 .build();
-        Token savedToken = tokenRepository.save(token);
-        System.out.println("💾 Saved token: " + savedToken.getToken() + " for user: " + user.getEmail());
+        tokenRepository.save(token);
     }
 
     private void revokeAllUserTokens(User user) {
