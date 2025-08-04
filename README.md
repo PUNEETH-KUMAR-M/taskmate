@@ -167,6 +167,73 @@ mvn test -Dtest=TaskServiceTest
 
 ---
 
+## 🚀 Deployment on Render
+
+### Prerequisites
+- GitHub repository with your code
+- Render account
+
+### Quick Deployment Steps
+
+1. **Fork/Clone Repository**
+   ```bash
+   git clone https://github.com/PUNEETH-KUMAR-M/taskmate.git
+   ```
+
+2. **Push to Your Repository**
+   ```bash
+   git add .
+   git commit -m "Add Docker and Render configuration"
+   git push origin main
+   ```
+
+3. **Deploy on Render**
+   - Go to [Render Dashboard](https://dashboard.render.com)
+   - Click "New +" → "Blueprint"
+   - Connect your GitHub repository
+   - Render will automatically detect the `render.yaml` file
+   - Click "Apply" to deploy
+
+### Manual Deployment (Alternative)
+
+1. **Create Web Service**
+   - Go to Render Dashboard → "New +" → "Web Service"
+   - Connect your GitHub repository
+   - Set Environment: `Docker`
+   - Set Build Command: `docker build -t taskmate .`
+   - Set Start Command: `docker run -p $PORT:8080 taskmate`
+
+2. **Create Database**
+   - Go to "New +" → "PostgreSQL" (or MySQL)
+   - Choose plan and region
+   - Note down connection details
+
+3. **Configure Environment Variables**
+   ```
+   SPRING_PROFILES_ACTIVE=prod
+   DATABASE_URL=jdbc:mysql://your-db-host:3306/taskmate_db
+   DATABASE_USERNAME=your_username
+   DATABASE_PASSWORD=your_password
+   JWT_SECRET=your_256_bit_secret_key
+   PORT=8080
+   ```
+
+### Environment Variables
+
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `SPRING_PROFILES_ACTIVE` | Spring profile (use 'prod') | Yes |
+| `DATABASE_URL` | Database connection URL | Yes |
+| `DATABASE_USERNAME` | Database username | Yes |
+| `DATABASE_PASSWORD` | Database password | Yes |
+| `JWT_SECRET` | JWT secret key (256+ bits) | Yes |
+| `PORT` | Application port (Render sets this) | No |
+
+### Health Check
+The application includes a health check endpoint at `/api/tasks` for Render monitoring.
+
+---
+
 ## 🤝 Support
 
 - **Issues**: Create an issue on GitHub
