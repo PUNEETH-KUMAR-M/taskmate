@@ -33,8 +33,8 @@ COPY --from=0 /app/target/*.jar app.jar
 # Expose port 8080
 EXPOSE 8080
 
-# Set environment variables
-ENV JAVA_OPTS="-Xmx512m -Xms256m"
+# Set environment variables for AWS deployment
+ENV JAVA_OPTS="-Xmx1024m -Xms512m -XX:+UseG1GC"
 
 # Run the application
 ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"] 

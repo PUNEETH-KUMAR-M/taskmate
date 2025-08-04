@@ -167,70 +167,66 @@ mvn test -Dtest=TaskServiceTest
 
 ---
 
-## 🚀 Deployment on Render
+## ☁️ Deployment on AWS
 
 ### Prerequisites
-- GitHub repository with your code
-- Render account
+- [AWS Account](https://aws.amazon.com/)
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+- [Docker](https://docs.docker.com/get-docker/)
 
-### Quick Deployment Steps
+### Quick Deployment Options
 
-1. **Fork/Clone Repository**
-   ```bash
-   git clone https://github.com/PUNEETH-KUMAR-M/taskmate.git
-   ```
+#### Option 1: AWS Elastic Beanstalk (Recommended)
+```bash
+# Install EB CLI
+pip install awsebcli
 
-2. **Push to Your Repository**
-   ```bash
-   git add .
-   git commit -m "Add Docker and Render configuration"
-   git push origin main
-   ```
+# Initialize and deploy
+eb init
+eb create taskmate-env
+eb deploy
+```
 
-3. **Deploy on Render**
-   - Go to [Render Dashboard](https://dashboard.render.com)
-   - Click "New +" → "Blueprint"
-   - Connect your GitHub repository
-   - Render will automatically detect the `render.yaml` file
-   - Click "Apply" to deploy
+#### Option 2: AWS ECS with Fargate
+```bash
+# Build and push to ECR
+docker build -t taskmate .
+aws ecr create-repository --repository-name taskmate
+aws ecr get-login-password | docker login --username AWS --password-stdin your-account.dkr.ecr.region.amazonaws.com
+docker tag taskmate:latest your-account.dkr.ecr.region.amazonaws.com/taskmate:latest
+docker push your-account.dkr.ecr.region.amazonaws.com/taskmate:latest
+```
 
-### Manual Deployment (Alternative)
-
-1. **Create Web Service**
-   - Go to Render Dashboard → "New +" → "Web Service"
-   - Connect your GitHub repository
-   - Set Environment: `Docker`
-   - Set Build Command: `docker build -t taskmate .`
-   - Set Start Command: `docker run -p $PORT:8080 taskmate`
-
-2. **Create Database**
-   - Go to "New +" → "PostgreSQL" (or MySQL)
-   - Choose plan and region
-   - Note down connection details
-
-3. **Configure Environment Variables**
-   ```
-   SPRING_PROFILES_ACTIVE=prod
-   DATABASE_URL=jdbc:mysql://your-db-host:3306/taskmate_db
-   DATABASE_USERNAME=your_username
-   DATABASE_PASSWORD=your_password
-   JWT_SECRET=your_256_bit_secret_key
-   PORT=8080
-   ```
+#### Option 3: AWS EC2
+```bash
+# Deploy on EC2 instance
+git clone https://github.com/your-username/taskmate.git
+cd taskmate
+./mvnw clean package -DskipTests
+docker build -t taskmate .
+docker run -d -p 8080:8080 --name taskmate-app taskmate
+```
 
 ### Environment Variables
 
 | Variable | Description | Required |
 |----------|-------------|----------|
-| `SPRING_PROFILES_ACTIVE` | Spring profile (use 'prod') | Yes |
-| `DATABASE_URL` | Database connection URL | Yes |
+| `SPRING_PROFILES_ACTIVE` | Spring profile (use 'aws') | Yes |
+| `DATABASE_URL` | RDS connection URL | Yes |
 | `DATABASE_USERNAME` | Database username | Yes |
 | `DATABASE_PASSWORD` | Database password | Yes |
 | `JWT_SECRET` | JWT secret key (256+ bits) | Yes |
-| `PORT` | Application port (Render sets this) | No |
+| `PORT` | Application port | No (default: 8080) |
+
+### Database Setup
+- **AWS RDS**: Create MySQL 8.0 instance
+- **AWS Aurora**: For high-performance applications
+- **Security**: Configure security groups for database access
 
 ### Health Check
-The application includes a health check endpoint at `/api/tasks` for Render monitoring.
+The application includes health check endpoints at `/api/health` and `/api/tasks` for AWS monitoring.
+
+For detailed AWS deployment instructions, see [AWS_DEPLOYMENT.md](AWS_DEPLOYMENT.md).
 
 ---
 
