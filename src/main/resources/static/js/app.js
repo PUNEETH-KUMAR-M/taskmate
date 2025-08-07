@@ -3,30 +3,77 @@ let currentUser = null;
 let stompClient = null;
 let authToken = null;
 
-// API Base URL
-const API_BASE = 'http://localhost:8080/api';
+// API Base URL - Dynamic for deployment
+const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+    ? 'http://localhost:8080/api' 
+    : `${window.location.protocol}//${window.location.host}/api`;
+
+// Ensure logout button is hidden by default on page load
+// Place this at the very top of the file
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('userSection').style.display = 'none';
+    document.getElementById('loginSection').style.display = 'flex';
+});
 
 // Initialize the application
+// Ensure correct navbar state on load
+function updateNavbarAuthState(isLoggedIn) {
+    if (isLoggedIn && currentUser) {
+        document.getElementById('userSection').style.display = 'flex';
+        document.getElementById('loginSection').style.display = 'none';
+    } else {
+        document.getElementById('userSection').style.display = 'none';
+        document.getElementById('loginSection').style.display = 'flex';
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     initializeApp();
-    
-    // Test modal elements
+    // Removed early updateNavbarAuthState call
     setTimeout(() => {
         testCreateTaskModal();
     }, 1000);
 });
 
 function initializeApp() {
-    // Check if user is already logged in
     const token = localStorage.getItem('authToken');
-    if (token) {
+    const email = localStorage.getItem('userEmail');
+    if (token && email) {
         authToken = token;
-        // TODO: Validate token and get user info
-        showDashboard();
+        getUserInfoOnInit(email);
+    } else {
+        updateNavbarAuthState(false);
     }
-    
-    // Setup event listeners
     setupEventListeners();
+}
+
+// Helper for initial user info fetch
+async function getUserInfoOnInit(email) {
+    try {
+        const response = await fetch(`${API_BASE}/profile/${email}`, {
+            headers: {
+                'Authorization': `Bearer ${authToken}`
+            }
+        });
+        if (response.ok) {
+            currentUser = await response.json();
+            updateUI();
+            showDashboard();
+        } else {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('userEmail');
+            authToken = null;
+            currentUser = null;
+            updateNavbarAuthState(false);
+        }
+    } catch (error) {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('userEmail');
+        authToken = null;
+        currentUser = null;
+        updateNavbarAuthState(false);
+    }
 }
 
 function setupEventListeners() {
@@ -60,20 +107,12 @@ async function handleLogin(event) {
             const data = await response.json();
             authToken = data.token;
             localStorage.setItem('authToken', authToken);
-            
+            localStorage.setItem('userEmail', email); // Store email
             // Get user info
             await getUserInfo(email);
-            
             closeModal('loginModal');
             showDashboard();
-            
-            // Force logout button visibility
-            document.getElementById('userSection').style.display = 'flex';
-            document.getElementById('loginSection').style.display = 'none';
-            
             showNotification('Login successful!', 'success');
-            
-            // Connect to WebSocket
             connectWebSocket();
         } else {
             const errorData = await response.text();
@@ -112,22 +151,12 @@ async function handleRegister(event) {
             const data = await response.json();
             authToken = data.token;
             localStorage.setItem('authToken', authToken);
-            
-            console.log('✅ Registration successful, getting user info...');
-            
+            localStorage.setItem('userEmail', email); // Store email
             // Get user info
             await getUserInfo(email);
-            
             closeModal('registerModal');
             showDashboard();
-            
-            // Force logout button visibility
-            document.getElementById('userSection').style.display = 'flex';
-            document.getElementById('loginSection').style.display = 'none';
-            
             showNotification('Registration successful!', 'success');
-            
-            // Connect to WebSocket
             connectWebSocket();
         } else {
             const errorData = await response.text();
@@ -493,11 +522,12 @@ function updateUI() {
         roleBadge.className = `role-badge ${currentUser.role.toLowerCase()}`;
         
         // Ensure logout button is visible
-        document.getElementById('userSection').style.display = 'flex';
-        document.getElementById('loginSection').style.display = 'none';
-        
+        updateNavbarAuthState(true);
         console.log('🔧 Updated UI - User:', currentUser.name, 'Role:', currentUser.role);
         console.log('🔧 Logout button should be visible now');
+    } else {
+        // Hide logout button if not logged in
+        updateNavbarAuthState(false);
     }
 }
 
@@ -606,6 +636,7 @@ function showNotification(message, type) {
 
 function logout() {
     localStorage.removeItem('authToken');
+    localStorage.removeItem('userEmail');
     authToken = null;
     currentUser = null;
     
@@ -616,9 +647,7 @@ function logout() {
     // Reset UI
     document.getElementById('dashboard').style.display = 'none';
     document.getElementById('landingPage').style.display = 'block';
-    document.getElementById('loginSection').style.display = 'flex';
-    document.getElementById('userSection').style.display = 'none';
-    
+    updateNavbarAuthState(false);
     showNotification('Logged out successfully', 'info');
 }
 
