@@ -3,12 +3,12 @@ services:
     name: taskmate-app
     env: docker
     plan: free
-    dockerfilePath: ./Dockerfile.render
+    dockerfilePath: ./Dockerfile.render.simple
     dockerContext: .
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: render
       - key: JAVA_OPTS
-        value: "-Xmx1024m -Xms512m -XX:+UseG1GC"
+        value: "-Xmx512m -Xms256m"
     healthCheckPath: /api/health
     autoDeploy: true

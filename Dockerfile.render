@@ -22,7 +22,7 @@ COPY src src
 RUN ./mvnw clean package -DskipTests
 
 # Create a new stage for runtime
-FROM openjdk:21-jre-slim
+FROM openjdk:21-slim
 
 # Set working directory
 WORKDIR /app

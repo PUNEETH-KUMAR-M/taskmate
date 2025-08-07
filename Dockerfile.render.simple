@@ -1,0 +1,35 @@
+# Use OpenJDK 21 slim image
+FROM openjdk:21-slim
+
+# Set working directory
+WORKDIR /app
+
+# Copy the Maven wrapper and pom.xml first for better caching
+COPY mvnw .
+COPY .mvn .mvn
+COPY pom.xml .
+
+# Make mvnw executable
+RUN chmod +x mvnw
+
+# Download dependencies
+RUN ./mvnw dependency:go-offline -B
+
+# Copy source code
+COPY src src
+
+# Build the application
+RUN ./mvnw clean package -DskipTests
+
+# Create data directory for H2 database
+RUN mkdir -p data
+
+# Expose port
+EXPOSE 8080
+
+# Set environment variables for Render free tier
+ENV JAVA_OPTS="-Xmx512m -Xms256m"
+ENV SPRING_PROFILES_ACTIVE=render
+
+# Run the application
+CMD ["java", "-Xmx512m", "-Xms256m", "-jar", "target/taskmate-0.0.1-SNAPSHOT.jar"]
