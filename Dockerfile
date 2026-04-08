@@ -1,5 +1,5 @@
-# Build stage
-FROM openjdk:21-jdk-slim AS build
+# Build stage (openjdk official images were removed from Docker Hub; use Eclipse Temurin)
+FROM eclipse-temurin:21-jdk AS build
 WORKDIR /app
 COPY mvnw .
 COPY .mvn .mvn
@@ -8,8 +8,8 @@ RUN chmod +x mvnw && ./mvnw dependency:go-offline -B
 COPY src src
 RUN ./mvnw clean package -DskipTests -B
 
-# Runtime stage
-FROM openjdk:21-slim
+# Runtime stage — JRE-only image, smaller than full JDK
+FROM eclipse-temurin:21-jre
 WORKDIR /app
 RUN mkdir -p data
 COPY --from=build /app/target/*.jar app.jar
