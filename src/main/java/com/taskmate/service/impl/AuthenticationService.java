@@ -9,6 +9,7 @@ import com.taskmate.model.User;
 import com.taskmate.repository.TokenRepository;
 import com.taskmate.repository.UserRepository;
 import com.taskmate.security.JwtService;
+import com.taskmate.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,6 +30,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final UserService userService;
     
     // Clear all old tokens on startup
     @PostConstruct
@@ -42,6 +44,8 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse register(RegisterRequest request, Role role) {
+        userService.validateRegistrationEmail(request.getEmail());
+
         // Check if user already exists
         Optional<User> existing = userRepository.findByEmail(request.getEmail());
         if (existing.isPresent()) {
@@ -63,7 +67,7 @@ public class AuthenticationService {
                 .role(role)
                 .build();
 
-        User savedUser = userRepository.save(user);
+        userRepository.save(user);
 
         String jwtToken = jwtService.generateToken(user.getEmail());
         saveUserToken(user, jwtToken);

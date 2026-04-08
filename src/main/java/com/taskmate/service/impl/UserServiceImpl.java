@@ -45,6 +45,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void validateRegistrationEmail(String email) {
+        if (email == null || email.isBlank()) {
+            throw new IllegalArgumentException("Email is required");
+        }
+        String normalized = email.trim().toLowerCase();
+        if (!normalized.endsWith("@gmail.com")) {
+            throw new IllegalArgumentException("Registration is only allowed for @gmail.com addresses");
+        }
+    }
+
+    @Override
     public User updateProfile(String email, UserProfileRequest request) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found with email: " + email));

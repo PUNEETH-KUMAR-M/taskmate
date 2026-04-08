@@ -12,4 +12,9 @@ public interface UserService {
     List<User> getAllUsers();
     User updateProfile(String email, UserProfileRequest request);
     User getUserProfile(String email);
+
+    /**
+     * Ensures registration email is allowed (must be a @gmail.com address).
+     */
+    void validateRegistrationEmail(String email);
 }

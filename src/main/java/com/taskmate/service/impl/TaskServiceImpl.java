@@ -5,6 +5,7 @@ import com.taskmate.model.TaskStatus;
 import com.taskmate.model.User;
 import com.taskmate.repository.TaskRepository;
 import com.taskmate.repository.UserRepository;
+import com.taskmate.service.EmailService;
 import com.taskmate.service.TaskService;
 import com.taskmate.service.WebSocketService;
 import jakarta.transaction.Transactional;
@@ -21,6 +22,7 @@ public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
     private final WebSocketService webSocketService;
+    private final EmailService emailService;
 
     @Override
     public Task createTask(Task task, Long userId) {
@@ -31,13 +33,15 @@ public class TaskServiceImpl implements TaskService {
         task.setStatus(TaskStatus.PENDING);
         
         Task savedTask = taskRepository.save(task);
-        
+
+        emailService.sendTaskAssignmentNotification(savedTask, user);
+
         try {
             webSocketService.notifyTaskCreated(savedTask);
         } catch (Exception e) {
             // WebSocket notification failed, but task was created successfully
         }
-        
+
         return savedTask;
     }
 
