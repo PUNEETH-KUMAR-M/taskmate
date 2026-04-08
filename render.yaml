@@ -3,7 +3,7 @@ services:
     name: taskmate-app
     env: docker
     plan: free
-    dockerfilePath: ./Dockerfile.render.simple
+    dockerfilePath: ./Dockerfile
     dockerContext: .
     envVars:
       - key: SPRING_PROFILES_ACTIVE

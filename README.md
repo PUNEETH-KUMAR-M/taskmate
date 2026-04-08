@@ -167,66 +167,18 @@ mvn test -Dtest=TaskServiceTest
 
 ---
 
-## ☁️ Deployment on AWS
+## ☁️ Docker & Render
 
-### Prerequisites
-- [AWS Account](https://aws.amazon.com/)
-- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
-- [Docker](https://docs.docker.com/get-docker/)
+**Local image**
 
-### Quick Deployment Options
-
-#### Option 1: AWS Elastic Beanstalk (Recommended)
 ```bash
-# Install EB CLI
-pip install awsebcli
-
-# Initialize and deploy
-eb init
-eb create taskmate-env
-eb deploy
-```
-
-#### Option 2: AWS ECS with Fargate
-```bash
-# Build and push to ECR
 docker build -t taskmate .
-aws ecr create-repository --repository-name taskmate
-aws ecr get-login-password | docker login --username AWS --password-stdin your-account.dkr.ecr.region.amazonaws.com
-docker tag taskmate:latest your-account.dkr.ecr.region.amazonaws.com/taskmate:latest
-docker push your-account.dkr.ecr.region.amazonaws.com/taskmate:latest
+docker run -p 8080:8080 taskmate
 ```
 
-#### Option 3: AWS EC2
-```bash
-# Deploy on EC2 instance
-git clone https://github.com/your-username/taskmate.git
-cd taskmate
-./mvnw clean package -DskipTests
-docker build -t taskmate .
-docker run -d -p 8080:8080 --name taskmate-app taskmate
-```
+**Render** — use `render.yaml` in the repo root. It builds from `Dockerfile` and sets `SPRING_PROFILES_ACTIVE=render` (see `application-render.properties` for H2 file DB and `PORT`). Override `JWT_SECRET` and mail variables in the Render dashboard as needed.
 
-### Environment Variables
-
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `SPRING_PROFILES_ACTIVE` | Spring profile (use 'aws') | Yes |
-| `DATABASE_URL` | RDS connection URL | Yes |
-| `DATABASE_USERNAME` | Database username | Yes |
-| `DATABASE_PASSWORD` | Database password | Yes |
-| `JWT_SECRET` | JWT secret key (256+ bits) | Yes |
-| `PORT` | Application port | No (default: 8080) |
-
-### Database Setup
-- **AWS RDS**: Create MySQL 8.0 instance
-- **AWS Aurora**: For high-performance applications
-- **Security**: Configure security groups for database access
-
-### Health Check
-The application includes health check endpoints at `/api/health` and `/api/tasks` for AWS monitoring.
-
-For detailed AWS deployment instructions, see [AWS_DEPLOYMENT.md](AWS_DEPLOYMENT.md).
+Health check: `GET /api/health`
 
 ---
 
