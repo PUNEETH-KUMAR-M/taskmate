@@ -30,6 +30,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User saveUser(User user) {
+        validateRegistrationEmail(user.getEmail());
         return userRepository.save(user);
     }
 
@@ -69,6 +70,7 @@ public class UserServiceImpl implements UserService {
         if (request.getEmail() != null && !request.getEmail().trim().isEmpty()) {
             // Check if new email is already taken
             if (!email.equals(request.getEmail())) {
+                validateRegistrationEmail(request.getEmail());
                 userRepository.findByEmail(request.getEmail())
                         .ifPresent(existingUser -> {
                             throw new RuntimeException("Email already exists: " + request.getEmail());
