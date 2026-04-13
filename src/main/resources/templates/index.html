@@ -20,9 +20,9 @@
                     <button class="btn btn-primary" onclick="showLoginModal()">Login</button>
                     <button class="btn btn-secondary" onclick="showRegisterModal()">Register</button>
                 </div>
-                <div class="nav-item" id="userSection" style="display: none;">
+                <div class="nav-item nav-user-section" id="navUserSection" style="display: none;">
                     <span id="userName"></span>
-                    <button class="btn btn-outline" onclick="logout()">
+                    <button class="btn btn-outline btn-logout" onclick="logout()">
                         <i class="fas fa-sign-out-alt"></i> Logout
                     </button>
                 </div>
@@ -85,6 +85,74 @@
                 </div>
             </div>
         </div>
+
+        <!-- Project Showcase Section -->
+        <section class="showcase-section" aria-label="Project showcase">
+            <div class="showcase-container">
+                <div class="showcase-header">
+                    <h2>See what TaskMate helps you do</h2>
+                    <p>
+                        TaskMate is built to keep teams aligned: assign work, track status, and get real-time updates.
+                    </p>
+                </div>
+
+                <div class="showcase-grid">
+                    <div class="showcase-card">
+                        <div class="showcase-icon">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <h3>Create accounts & roles</h3>
+                        <p>
+                            Register as a user or admin. Admins can create and assign tasks; users update progress.
+                        </p>
+                    </div>
+
+                    <div class="showcase-card">
+                        <div class="showcase-icon">
+                            <i class="fas fa-list-check"></i>
+                        </div>
+                        <h3>Manage tasks end-to-end</h3>
+                        <p>
+                            Add title, description, deadline, priority, comments, and assign to a teammate in seconds.
+                        </p>
+                    </div>
+
+                    <div class="showcase-card">
+                        <div class="showcase-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <h3>Get real-time updates</h3>
+                        <p>
+                            Live updates via WebSockets keep everyone in sync when tasks change or statuses move forward.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="showcase-steps">
+                    <div class="step">
+                        <span class="step-badge">1</span>
+                        <div class="step-content">
+                            <div class="step-title">Sign up</div>
+                            <div class="step-desc">Create your account and pick your role.</div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <span class="step-badge">2</span>
+                        <div class="step-content">
+                            <div class="step-title">Create or receive tasks</div>
+                            <div class="step-desc">Admins assign tasks; users see tasks instantly.</div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <span class="step-badge">3</span>
+                        <div class="step-content">
+                            <div class="step-title">Track progress</div>
+                            <div class="step-desc">Move tasks from Pending → In Progress → Completed.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <!-- Login Modal -->
         <div id="loginModal" class="modal">
@@ -176,7 +244,7 @@
             </div>
 
             <!-- User Section -->
-            <div id="userSection" class="section" style="display: none;">
+            <div id="userTasksSection" class="section" style="display: none;">
                 <div class="section-header">
                     <h2>My Tasks</h2>
                 </div>

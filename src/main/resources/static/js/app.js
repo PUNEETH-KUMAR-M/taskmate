@@ -12,7 +12,7 @@ const API_BASE = window.location.hostname === 'localhost' || window.location.hos
 // Place this at the very top of the file
 
 document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('userSection').style.display = 'none';
+    document.getElementById('navUserSection').style.display = 'none';
     document.getElementById('loginSection').style.display = 'flex';
 });
 
@@ -20,10 +20,10 @@ document.addEventListener('DOMContentLoaded', function() {
 // Ensure correct navbar state on load
 function updateNavbarAuthState(isLoggedIn) {
     if (isLoggedIn && currentUser) {
-        document.getElementById('userSection').style.display = 'flex';
+        document.getElementById('navUserSection').style.display = 'flex';
         document.getElementById('loginSection').style.display = 'none';
     } else {
-        document.getElementById('userSection').style.display = 'none';
+        document.getElementById('navUserSection').style.display = 'none';
         document.getElementById('loginSection').style.display = 'flex';
     }
 }
@@ -191,7 +191,7 @@ function showDashboard() {
     document.getElementById('dashboard').style.display = 'block';
     document.getElementById('landingPage').style.display = 'none';
     document.getElementById('loginSection').style.display = 'none';
-    document.getElementById('userSection').style.display = 'flex';
+    document.getElementById('navUserSection').style.display = 'flex';
     
     if (currentUser) {
         loadDashboardData();
@@ -208,7 +208,7 @@ async function loadDashboardData() {
 
 async function loadAdminDashboard() {
     document.getElementById('adminSection').style.display = 'block';
-    document.getElementById('userSection').style.display = 'none';
+    document.getElementById('userTasksSection').style.display = 'none';
     
     try {
         console.log('🔍 Loading admin dashboard...');
@@ -268,7 +268,7 @@ async function loadAdminDashboard() {
 
 async function loadUserDashboard() {
     document.getElementById('adminSection').style.display = 'none';
-    document.getElementById('userSection').style.display = 'block';
+    document.getElementById('userTasksSection').style.display = 'block';
     
     try {
         console.log('🔍 Loading user dashboard for:', currentUser.email);
